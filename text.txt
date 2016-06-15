@@ -1,0 +1,11 @@
+Strong type is well loved in the design community, and an even stronger component of 
+clean design. It can replace imagery and graphics that may otherwise overcomplicate a 
+design and convey the total essence of the above techniques in a simple and 
+straightforward way.
+
+To add textures to text, convert your text layer to a Smart Object first by right clicking 
+the layer and choosing “Convert to Smart Object.” You are limited to layer effects by 
+default unless your text is rasterized, a practice you want to avoid, even when 
+designing for the screen. Converting to Smart Objects allows you to apply filters and 
+other techniques to the text while preserving your editing capabilities in the event you 
+need to change what the text says later.
