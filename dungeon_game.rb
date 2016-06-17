@@ -17,13 +17,23 @@ class Dungeon
 
 	def show_current_description
 		puts find_room_in_dungeon(@player.location).full_description	## prints output from find_room method, and passes it players location
+		puts find_room_in_dungeon(@player.location).all_connections
 	end
+
 
 	def find_room_in_dungeon(reference)
 		@rooms.detect {|room|  room.reference == reference }	## returns current val, when matches
 	end
 
+	def find_room_in_direction(direction)
+		find_room_in_dungeon(@player.location).connections[direction]   ## retrieves location, and uses that caves connections to return new location 
+	end
 
+	def go(direction)
+		puts "You go " + direction.to_s
+		@player.location = find_room_in_direction(direction)
+		show_current_description
+	end
 
 	class Player
 		attr_accessor :name, :location
@@ -47,7 +57,12 @@ class Dungeon
 		def full_description
 			@name + "\n\nYou are in " + @description
 		end
+
+		def all_connections
+			"From here, you can go:   " + @connections.map{ |k , v| "#{k}" }.join("  |  ").prepend("|  ").concat("  |")
+		end
 	end
+
 
 
 
@@ -59,8 +74,19 @@ dungeon1 = Dungeon.new("TheMaxta")
 
 
 #add rooms here
-dungeon1.add_room(:largecave, "Large Cave", "a large cavernous cave", { :west => :smallcave } )
-dungeon1.add_room(:smallcave, "Small Cave", "claustrophobic cave", { :east => :largecave })
+dungeon1.add_room(:largecave, "Large Cave", "a large cavernous cave.", { :west => :centercave } )
+dungeon1.add_room(:smallcave, "Small Cave", "a small, claustrophobic cave.", { :east => :centercave } )
+dungeon1.add_room(:mediumcave, "Medium Cave", "an average-sized cave, boring.", { :north => :centercave } )
+dungeon1.add_room(:bosscave, "Boss Cave", "a cave with a boss monster!", { :south => :centercave } )
+dungeon1.add_room(:centercave, "Central Cave", "a cave in the middle of everything.", { :north => :bosscave, :east => :largecave,
+																						:south => :mediumcave, :west => :smallcave } )
+
 
 #start dungeon by placing player in the large cave
 dungeon1.start(:largecave)
+move = ""
+until move == ":stop"
+	move = gets.chomp.to_sym
+	move = move.downcase
+		dungeon1.go(move)
+end
