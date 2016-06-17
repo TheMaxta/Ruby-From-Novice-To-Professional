@@ -21,6 +21,12 @@ text = lines.join
 sentences = text.gsub(/\s+/, ' ').strip.split(/\.|\?|!/)						# splits string into sentences
 sentences_sorted = sentences.sort_by { |sentence| sentence.length }			# sorts sentences by their chracter length
 one_third = sentences_sorted.length / 3										# divide their lengths by 3 --
+puts sentences_sorted.length
+
+if sentences_sorted.length > 20
+	one_third = sentences_sorted.length / 3
+end
+
 ideal_sentences = sentences_sorted.slice(one_third, one_third + 1)			# --to delete super short sentences, and super long sentences
 ideal_sentences = ideal_sentences.select { |sentence| sentence =~ /is|are/ }
 puts ideal_sentences.join(". ")
@@ -78,5 +84,17 @@ puts "#{percent}% of the words were completely unnecessary. Thanks."
 
 
 
+bad_words = %w{fuck ass shit dick bitch nigger faggot cunt fag}
+bad_count = 0
 
+	keywords = words.select do |word|
+
+		if bad_words.include?(word)
+			bad_count += 1
+		end
+	end
+
+puts "Author used #{bad_count} bad words"
+
+puts "Here they are: #{keywords}"
 
