@@ -102,7 +102,6 @@ $db.results_as_hash = true
 	end
 
 	def create_post
-		
 		my_subject  = write_post_subject
 		my_body     = write_post_body
 		this_post   = Post.new(subject, body)
@@ -511,7 +510,11 @@ scroll_display
 				when '5'
 					#future use
 				when '6'
-					#future use
+					if session
+						create_post
+					else
+						puts "\n\n\n |||     You Need to be SIGNED IN, to Post.     ||| \n\n"
+					end
 				when '7'
 					loading_display
 					puts "\n\n"
