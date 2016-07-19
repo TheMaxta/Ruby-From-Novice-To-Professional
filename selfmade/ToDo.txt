@@ -1,0 +1,7 @@
+My To Do List:
+1). Start to do list
+2). Finish to do list
+3). Start some project
+4).  Then stop.
+5).  Finish ruby book.     date added: 25-JUN-2016
+6).  Finish resume.     date added: 25-JUN-2016
