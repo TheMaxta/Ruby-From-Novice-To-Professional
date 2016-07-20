@@ -9,7 +9,7 @@ $db.results_as_hash = true
 	# 2). dynamic find function(done)
 	# 3). update people table with new information
 	# -- below tasks involve a separate relational sql table
-	# 5). users can post a forum(in progress)
+	# 5). users can post a forum(done)
 	# 6). users can post comments(in progress)
 	# 7). searching for a username returns all similar users, not just one.(done)
 
@@ -84,14 +84,42 @@ $db.results_as_hash = true
 
 	def display_all_posts
 
-	end
+
+		list = $db.execute("SELECT * FROM posts")
+
+
+		puts "\n\n\n\n"
+		puts "Most Recent Posts: "
+		puts "\n\n"
+		unless list
+			puts "No Posts Found."
+			return
+		end
+
+
+		iteration = 1
+
+		list.each do |x|
+			puts "    #{iteration}.  |   Title:  #{x['subject']}   |   Author:  #{x['author']}   |    Karma:  #{x['karma']}   |\n\n"
+			iteration += 1
+		end
+
+
+	end #end of method
 
 
 	def write_post_subject
 		puts "\n\n\n"
 		puts "Please Type a subject line, or a title for your post."
+
 		subject = gets.chomp
-		return subject
+		if subject.length >= 30
+			puts "Title must be under 30 characters. "
+			puts "Please try again."
+			write_post_subject
+		else
+			return subject
+		end
 	end
 
 	def write_post_body
@@ -102,13 +130,12 @@ $db.results_as_hash = true
 	end
 
 	def create_post
-		my_subject  = write_post_subject
-		my_body     = write_post_body
-		this_post   = Post.new(subject, body)
-
+		my_subject  = write_post_subject #retrieve user's subject
+		my_body     = write_post_body	 #retrieve user's post body
+		this_post   = Post.new(my_subject, my_body) #create a post object
+		this_post.display_post
+		this_post.post_to_db
 	end
-
-
 
 
 	def create_posts_table
@@ -120,7 +147,7 @@ $db.results_as_hash = true
 				post_id integer primary key,
 				author_id integer,
 				author varchar(50),
-				subject varchar(150),
+				subject varchar(30),
 				body varchar(650),
 				karma integer
 				)
@@ -131,8 +158,10 @@ $db.results_as_hash = true
 
 	class Post
 		def initialize(subject, body)
-
+			####
 			@post_id    = 0
+			####
+
 
 
 			@autor_id   = $session_id
@@ -140,7 +169,6 @@ $db.results_as_hash = true
 
 			@author     = $session_name
 			#user that submitted
-
 
 			@subject    = subject
 			#post title
@@ -155,7 +183,13 @@ $db.results_as_hash = true
 			#replies
 		end
 
+		def post_to_db
 
+			$db.execute(
+				"INSERT INTO posts ( author_id , author , subject , body , karma ) VALUES ( ? , ? , ? , ? , ? )",
+				@author_id , @author , @subject , @body , @karma  )
+
+		end
 
 		def write_comment
 			puts "What did you think about this post?"
@@ -173,11 +207,11 @@ $db.results_as_hash = true
 			puts "author : #{@author}"
 			puts "---------------------"
 			puts "karma  : #{@karma}"
-			puts "==================================================================\n\n\n"
+			puts "==================================================================\n"
 			puts "-------|Post Body|------------------------------------------------"
-			puts "\n\n"
+			puts "\n\n\n"
 			puts @body
-			puts "\n\n"
+			puts "\n\n\n"
 
 			puts "------------------------------------------------------------------"
 
@@ -192,7 +226,7 @@ $db.results_as_hash = true
 		end
 
 		
-	end
+	end ############# END POSTS sub-CLASS #############
 
 
 	def drop_posts_table
@@ -418,8 +452,8 @@ $db.results_as_hash = true
 
 		#now, use these var's to create a person instance in sql db
 		$db.execute(
-			"INSERT INTO people (name, job, gender, age, password, access) VALUES (?,?,?,?,?,?)", name, job, gender, age, password, "Basic")
-		
+			"INSERT INTO people ( name , job , gender , age , password , access ) VALUES ( ? , ? , ? , ? , ? , ? )",
+			 name, job, gender, age, password, "Basic"  )		
 	end
 
 	def display_all_people
@@ -482,7 +516,7 @@ scroll_display
 				(2) -- Create an Account.
 				(3) -- Look for a Person.
 				(4) -- Login.
-				(5) -- Browse Forum.
+				(5) -- Browse Forum Posts.
 				(6) -- Write a Post.
 				(7) -- Set Admin Permissions.
 				(8) -- Drop All Accounts.
@@ -508,12 +542,13 @@ scroll_display
 					loading_display
 					login
 				when '5'
-					#future use
+					loading_display
+					display_all_posts
 				when '6'
-					if session
+					if $session_id
 						create_post
 					else
-						puts "\n\n\n |||     You Need to be SIGNED IN, to Post.     ||| \n\n"
+						puts "\n\n\n\n |||     You Need to be SIGNED IN, to Post.     ||| \n\n\n\n"
 					end
 				when '7'
 					loading_display
@@ -542,7 +577,7 @@ scroll_display
 				(2) -- Create an Account.
 				(3) -- Look for a Person.
 				(4) -- Logout.
-				(5) -- Browse Forum.
+				(5) -- Browse Forum Posts.
 				(6) -- Write a Post.
 				(7) -- Set Admin Permissions.
 				(8) -- Drop All Accounts.
@@ -556,10 +591,11 @@ scroll_display
 				when '2'
 					add_person
 				when '3'
-					puts "\n\n\n"
-					puts "------------------------------------------------------------------------"
-					#display_all_people
-					puts "------------------------------------------------------------------------"
+					puts "\n\n\n\n"
+					puts "Accounts: "
+					puts "------------------------------"
+					display_all_people
+					puts "------------------------------"
 					puts "\n\n\n"
 					puts "Enter the username or ID of the person you are looking for:\n\n"
 					person_instance = find_person
@@ -570,8 +606,16 @@ scroll_display
 				when '5'
 					display_all_posts
 				when '6'
-					write_post
+
+						if $session_id
+							create_post
+						else
+							puts "\n\n\n\n |||     You Need to be SIGNED IN, to Post.     ||| \n\n\n\n"
+						end
+
 				when '7'
+					loading_display
+					puts "\n\n"
 					set_access
 				when '8'
 					# Do Nothing for now
