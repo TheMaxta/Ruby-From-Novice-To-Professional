@@ -5,13 +5,12 @@ $db.results_as_hash = true
 
 	###TASKS
 
-	# 1). possible object oriented structure?? 
-	# 2). dynamic find function(done)
-	# 3). update people table with new information
-	# -- below tasks involve a separate relational sql table
-	# 5). users can post a forum(done)
-	# 6). users can post comments(in progress)
-	# 7). searching for a username returns all similar users, not just one.(done)
+				# 1). possible object oriented structure(done) 
+				# 2). dynamic find function(done)
+				# 3). update people table with new information(done)
+				# 5). users can post a forum(done)
+		# 6). users can post comments(!INCOMPLETE!)
+				# 7). searching for a username returns all similar users, not just one.(done)
 
 
 	#run on startup
@@ -38,7 +37,25 @@ $db.results_as_hash = true
 		$session_access   = person_instance['access']
 	end
 
-	def set_access
+
+
+
+	def set_basic
+		set_permissions("Basic")
+
+	end
+
+	def set_admin
+		set_permissions("Admin")
+	end
+
+	def set_developer
+		set_permissions("Developer")
+
+	end
+
+
+	def set_permissions(permission_type)
 		puts "\n\n"
 		puts "Enter the accounts name: "
 		person_instance = find_person
@@ -60,20 +77,24 @@ $db.results_as_hash = true
 
 		sleep(0.5)
 
-		puts "  Give this account administration access? "
-		puts "     -------| Yes | or | No |-------       "
-		sleep(1.8)
+		puts "             Modify this accounts permissions?    "
+		puts "                 |  Yes  |   or   |  No  |       "
 		puts
 		puts
+
+
 		response = gets.chomp
 		if response.downcase == 'yes'
-			person_instance['access'] = "Admin"
 			puts "\n\n\n\n\n\n"
 			sleep(1)
-			puts "  !!   Admin Privileges Have Been Granted   !!\n\n\n"
+
+			#pass the user's name as an arg, so method can match the name to database
+			modify_user_access(person_instance['name'], permission_type)
+
+			puts "  !!   #{permission_type} Permissions Have Been Granted   !!\n\n\n"
 			sleep(2)
 		else
-
+			puts "\n\nReturning to Main Menu...\n\n"
 			sleep(1)
 			return
 		end
@@ -286,7 +307,7 @@ $db.results_as_hash = true
 		print "| "
 		25.times do
 			print "==="
-			sleep(0.1)
+			sleep(0.05)
 		end
 
 		print " |"
@@ -295,14 +316,6 @@ $db.results_as_hash = true
 
 
 	end
-
-
-
-
-
-
-
-
 
 
 	def login
@@ -396,6 +409,18 @@ $db.results_as_hash = true
 		exit
 	end
 
+	def modify_user_access(passed_name, permission_type)
+
+		$db.execute("
+		UPDATE people
+		SET access = ?
+		WHERE name = ? " , permission_type , passed_name )
+
+
+
+	end
+
+
 	def create_people_table
 		puts "Creating people table"
 
@@ -473,6 +498,9 @@ $db.results_as_hash = true
 	def find_person
 
 		id = gets.chomp
+
+
+
 
 		person = $db.execute("SELECT * FROM people WHERE name = ? OR id = ?",id, id.to_i).first
 
@@ -552,8 +580,28 @@ scroll_display
 					end
 				when '7'
 					loading_display
+					puts "\n\n\n\n\n"
+					puts "1.) Basic     Permissions"
+					puts "2.) Admin     Permissions"
+					puts "3.) Developer Permissions"
 					puts "\n\n"
-					set_access
+					puts "9.) Back\n\n\n"
+
+
+					temp = gets.chomp
+
+
+
+					case temp
+					when '1'
+						set_basic
+					when '2'
+						set_admin
+					when '3'
+						set_developer
+					end ## end nested case
+
+
 
 				when '8'
 					# do nothing for now
@@ -616,7 +664,7 @@ scroll_display
 				when '7'
 					loading_display
 					puts "\n\n"
-					set_access
+					set_permissions
 				when '8'
 					# Do Nothing for now
 				when '9'
@@ -636,7 +684,4 @@ scroll_display
 			gets.chomp
 
 	end #end loop
-
-
-
 
