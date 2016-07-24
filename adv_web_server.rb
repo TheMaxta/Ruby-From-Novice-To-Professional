@@ -1,5 +1,7 @@
 =begin
 
+
+
 		THIS SCRIPT RUNS AN HTTP SERVER. WHEN USING SERVER REFER TO URL: LOCALHOST:4200/add?a=1*b=2
 		this url will pass a, and b to the webrick server. Which will then call our NormalClass with 
 		the appropriate method and return the evaluation to the web-page.
