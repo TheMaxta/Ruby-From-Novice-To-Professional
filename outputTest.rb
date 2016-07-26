@@ -110,7 +110,7 @@ class FancyTerminal
 
 		puts "Right Now, we are setting #{security_level} Account Permissions."
 		puts "#{security_level} accounts should be able to...."
-		puts "\n\n\nESPONDING NUMBER"
+		puts "\n\n\nCORRESPONDING NUMBER"
 
 		puts 
 
@@ -206,6 +206,7 @@ class FancyTerminal
 		gets.chomp
 
 
+
 	end #method def
 
 
@@ -246,6 +247,6 @@ test2 = FancyTerminal.new("start stop login signup logout settings play pause ")
 #test2.ask_spacing
 #test.display_vars
 #test.equal_spaced_output
-array1 = ["Create New Account", "Log In", "Log Out", "View Posts", "Write A Post", "Quit", "Settings", "Commands", "Find Profiles", "Set Permissions"]
+array1 = ["Create New Account" , "My Account" , "Log In", "Log Out", "View Posts" , "View Texts" , "Write A Post", "Send a Text" , "Find A User", "Set Account Permissions", "Settings", "Database Commands"  ]
 array2 = %w[developer, admin, moderator, basic]
 test2.advancedMenuSelection(array1, array2)

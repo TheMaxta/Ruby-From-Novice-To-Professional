@@ -524,6 +524,169 @@ $db.results_as_hash = true
 
 
 
+
+
+
+
+
+
+
+
+
+
+	# UNDER DEVELOPMENT top
+	# UNDER DEVELOPMENT
+	# UNDER DEVELOPMENT
+
+
+
+	def set_security_levels(security_level, possible_buttons)
+		chosen_permissions = []
+		puts
+		puts "======================================================="
+		puts "Current Level: #{security_level}\n"
+		puts "======================================================="
+
+		puts "Right Now, we are setting #{security_level} Account Permissions."
+		puts "#{security_level} accounts should be able to...."
+		puts "\n\n\nCORRESPONDING NUMBER"
+
+		puts 
+
+		output_simple(possible_buttons)
+		puts "\n\n\n\n\n"
+		user_response  =  gets.chomp.to_i
+
+		## ADD USER'S SELECTED BUTTON TO BASIC'S ARRAY
+		chosen_permissions << possible_buttons[user_response-1]
+
+		puts "\n\n\n\n\n\n\n"
+		puts chosen_permissions
+
+			loop do 
+
+				puts "\n\n\nGreat, now pick another!\n"
+
+				output_simple(possible_buttons)
+				puts ""
+				puts "(exit) -- Done.\n\n\n\n\n"
+				user_response  =  gets.chomp
+
+				if user_response == 'exit'
+					puts "\n\n\n\n\n\n"
+					break
+				else
+					user_response = user_response.to_i
+				end
+				## ADD USER'S SELECTED BUTTON TO BASIC'S ARRAY
+				chosen_permissions << possible_buttons[user_response-1]
+				puts "\n\n\n\n\n\n\n\n"
+				puts "Current Selection: "
+				puts "-------------------------------------------------------"
+				puts chosen_permissions
+				puts "-------------------------------------------------------"
+
+			end
+
+
+		security_level_results = chosen_permissions
+
+		return security_level_results
+	end
+
+
+	def advancedMenuSelection(possible_buttons, possible_permissions)
+		security_level = "Basic-Users"
+		basic_results = set_security_levels(security_level, possible_buttons)
+		possible_buttons = possible_buttons - basic_results
+
+
+		security_level = "Moderator Accounts"
+		moderator_results = set_security_levels(security_level, possible_buttons)
+		possible_buttons = possible_buttons - moderator_results
+
+
+		security_level = "Admin Accounts"
+		admin_results = set_security_levels(security_level, possible_buttons)
+		possible_buttons = possible_buttons - admin_results
+
+
+		secutiry_level = "Developer Accounts"
+		developer_results = set_security_levels(security_level, possible_buttons)
+
+
+
+
+		basic      = basic_results
+		moderator  = basic + moderator_results
+		admin      = moderator + admin_results
+		developer  = admin + developer_results
+
+
+
+
+		puts "BASIC ACCOUNTS NOW HANDLE: "
+		puts basic 
+		puts "\n\n\n"
+		puts "MODERATOR ACCOUNTS NOW HANDLE "
+		puts moderator
+		puts "\n\n\n"
+
+		puts "ADMIN ACCOUNTS NOW HANDLE "
+		puts admin
+		puts "\n\n\n"
+
+		puts "DEVELOPER ACCOUNTS NOW HANDLE "
+		puts developer
+		puts "\n\n\n"
+		puts "\n\n\n"
+
+		$basic = basic 
+		$moderator = moderator
+		$admin = admin 
+		$developer = developer
+
+
+
+	end #method def
+
+	def output_simple(array)
+
+		puts "\n"
+
+		i = 0
+		loop do 
+			puts "(#{i+1}) -- #{array[i]}."
+				if array.length == i+1
+					break
+				end
+			i += 1
+		end #LOOP DO
+		puts "\n"
+	end
+
+
+	# UNDER DEVELOPMENT
+	# UNDER DEVELOPMENT
+	# UNDER DEVELOPMENT bottom
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #on startup, reset all session variables
 init_global_session_vars
 
@@ -532,6 +695,31 @@ scroll_display
 	loop do 
 		puts "\n\n"
 
+
+=begin
+		if $session_access == 'Basic'
+			output_simple($basic)
+		elsif $session_access == 'Moderator'
+			output_simple($moderator)
+		elsif $session_access == 'Admin'
+			output_simple($admin)
+		elsif $session_access == 'Developer'
+			output_simple($developer)
+		else
+			puts "\n\n\n\n\n"
+			puts "!!! ACCOUNT PERMISSIONS HAVE NOT BEEN SET !!! \n\n\n\n"
+			puts "press enter to continue, and set permissions."
+			gets.chomp
+			array1 = ["Create New Account" , "My Account" , "Log In", "Log Out", "View Posts" , "View Texts" , "Write A Post", "Send a Text" , "Find A User", "Set Account Permissions", "Settings", "Database Commands"  ]
+			array2 = %w[developer, admin, moderator, basic]
+			advancedMenuSelection(array1, array2)
+
+		end
+			
+			
+
+
+=end
 
 		if $session_id == nil 
 			
@@ -549,7 +737,7 @@ scroll_display
 				(7) -- Set Admin Permissions.
 				(8) -- Drop All Accounts.
 				(9) -- Quit.
-
+				(10) -- developer tests
 
 				}
 				case gets.chomp
@@ -607,10 +795,15 @@ scroll_display
 					# do nothing for now
 				when '9'
 					disconnect_and_quit
+				when '10'
+					array1 = ["Create New Account" , "My Account" , "Log In", "Log Out", "View Posts" , "View Texts" , "Write A Post", "Send a Text" , "Find A User", "Set Account Permissions", "Settings", "Database Commands"  ]
+					array2 = %w[developer, admin, moderator, basic]
+					advancedMenuSelection(array1, array2)
+
 				else
 					puts "Non-valid Entry."
 				end #end case
-
+				
 		else #if user is signed in
 
 			puts '-----------------------------------------------------------------'
