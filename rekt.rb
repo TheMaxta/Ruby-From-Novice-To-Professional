@@ -12,7 +12,7 @@ def word_box(word, width, height)
 	length     = word.length
 	h_length   = h_chars.length
 
-	mid_chars = get_mid_chars(h_chars)
+	mid_chars = get_mid_chars(h_chars) #characters between first and last letter
 
 	if (width >= 1 && height >= 1)
 			height.times do |x|
@@ -60,7 +60,6 @@ def get_mid_chars(chars)
 	midChars = midChars.drop(1)
 	midChars.reverse!
 	midChars = midChars.join
-
 	return midChars
 end
 
