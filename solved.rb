@@ -1,6 +1,5 @@
 def numbers(a, b)
-
-  if a>b
+  if a>b 
     a1=b
     b1=a
   else
@@ -12,8 +11,6 @@ def numbers(a, b)
     b1 = a1%b1
     a1=t
   end
-
 print(a/a1," ",b/a1)
 end
-
 numbers(10, 80)
