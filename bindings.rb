@@ -1,30 +1,32 @@
-def binding_elsewhere
-	x = 20
-	return binding
+class Class
+	def add_accessor(accessor_name)
+		Person.class_eval %Q{
+			attr_accessor :#{accessor_name}
+		}
+	end
 end
 
-remote_binding = binding_elsewhere
-x = 10
-eval("puts x")
-eval("puts x", remote_binding)
-puts "\n\n\n\n"
 
 #contains nothing
 class Person
 end
 
 
-def add_accessor_to_person(accessor_name)
-	Person.class_eval %Q{
-		attr_accessor :#{accessor_name}
-	}
+#another method
+class AnotherPerson
+	add_accessor :whatever
+
 end
 
+test = AnotherPerson.new
+test.whatever = "cool, bro"
+puts test.whatever
+
 person = Person.new
-add_accessor_to_person :name
-add_accessor_to_person :gender
-add_accessor_to_person :age
-add_accessor_to_person :intellect
+Person.add_accessor :name
+Person.add_accessor :gender
+Person.add_accessor :age
+Person.add_accessor :intellect
 
 person.name = "Donald Trump"
 person.gender = "female"

@@ -868,3 +868,9 @@ scroll_display
 
 	end #end loop
 
+
+class Account
+	attr_accessor :name, :job , :age , :access
+
+
+end
