@@ -22,6 +22,8 @@ def checkArray(a)
 	end
 end
 
+
+
 ## USER-BASED CLIENT INTERACTION
 
 =begin
