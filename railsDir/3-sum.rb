@@ -11,16 +11,31 @@ def checkArray(a)
 			for k in (j+1)..n do
 				if (a[i] + a[j] + a[k] == 0)
 					count += 1
-					puts "EQUALS ZERO ==========="
 					return count;
 				else
-					puts "DOESN'T EQUAL ZERO ===="
 					return count;
 				end
 			end
 		end
 	end
 end
+
+
+def main
+	a = []
+	count = 0
+	n = 4000
+
+	n.times do
+		a[0] = rand(-30..30)
+		a[1] = rand(-30..30)
+		a[2] = rand(-30..30)
+		count += checkArray(a)
+	end
+	return count
+
+end
+
 
 
 
@@ -48,6 +63,7 @@ end
 
 
 ## ANALYTICAL CLIENT FOR TESTING N
+=begin
 a = []
 count = 0
 puts "How many numbers should we test??"
@@ -64,9 +80,11 @@ end
 print count
 puts
 puts
+=end
+Benchmark.bm do |x|
+  x.report { $c = main() }
+end
 
-
-
-
-
-
+puts "zero-count:  #{$c}"
+puts
+puts
