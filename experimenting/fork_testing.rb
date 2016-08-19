@@ -4,6 +4,5 @@ child = fork do
 end
 
 puts "Waiting for the child process....."
-child
-Process.wait child
+Process.wait child #Just tells fork process to wait for other program
 puts "All done!"
