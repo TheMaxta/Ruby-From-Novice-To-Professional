@@ -1,0 +1,13 @@
+require 'gserver'
+
+class HelloServer < GServer ##CLASS INHERITS GSERVER ATTRIBUTES
+	def serve(io)
+		io.puts("Hello!")
+	end
+end
+
+
+server = HelloServer.new(1234)
+
+server.start
+server.join
